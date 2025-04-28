@@ -19,6 +19,9 @@ COPY .env /app/.env
 # Copy the transfer script
 COPY transfer_postgres_db.sh /app/
 
+# 👇 Expose port 8081
+EXPOSE 8081
+
 # Make the script executable
 RUN chmod +x /app/transfer_postgres_db.sh
 
