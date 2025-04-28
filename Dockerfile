@@ -1,5 +1,5 @@
 # Base image with PostgreSQL client tools
-FROM postgres:15
+FROM postgres:17
 
 # Set working directory
 WORKDIR /app
