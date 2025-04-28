@@ -5,10 +5,17 @@ FROM postgres:17
 # Set working directory
 WORKDIR /app
 
+# # Install any additional tools we might need
+# RUN apt-get update && apt-get install -y \
+#     curl \
+#     ca-certificates \
+#     && rm -rf /var/lib/apt/lists/*
+
 # Install any additional tools we might need
 RUN apt-get update && apt-get install -y \
     curl \
     ca-certificates \
+    netcat-openbsd \  
     && rm -rf /var/lib/apt/lists/*
 
 RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env cat /etc/secrets/.env    
