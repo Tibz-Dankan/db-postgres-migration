@@ -13,6 +13,9 @@ RUN apt-get update && apt-get install -y \
 
 RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env cat /etc/secrets/.env    
 
+# Copy .env file
+COPY .env /app/.env
+
 # Copy the transfer script
 COPY transfer_postgres_db.sh /app/
 
