@@ -1,4 +1,5 @@
-# Base image with PostgreSQL client tools
+# syntax = docker/dockerfile:1.2
+
 FROM postgres:17
 
 # Set working directory
@@ -9,6 +10,8 @@ RUN apt-get update && apt-get install -y \
     curl \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
+
+RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env cat /etc/secrets/.env    
 
 # Copy the transfer script
 COPY transfer_postgres_db.sh /app/
