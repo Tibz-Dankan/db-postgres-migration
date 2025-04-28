@@ -111,3 +111,10 @@ rm -f "${DUMP_FILE}"
 echo "Temporary files removed."
 
 echo "Database transfer process completed at $(date)."
+
+# Start a simple HTTP server to indicate success
+echo "Starting simple HTTP server on port 8081 to indicate success..."
+
+while true; do
+  echo -e "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nMigration Succeeded" | nc -l -p 8081 -q 1
+done
