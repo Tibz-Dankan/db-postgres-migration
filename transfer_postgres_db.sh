@@ -4,6 +4,37 @@
 # This script transfers all tables and their data from a source PostgreSQL database to a target
 # All connection parameters are read from environment variables
 
+
+# # To be uncommented and used locally
+# set -e  # Exit on any error
+
+# # Colors for output
+# RED='\033[0;31m'
+# GREEN='\033[0;32m'
+# YELLOW='\033[1;33m'
+# BLUE='\033[0;34m'
+# NC='\033[0m' # No Color
+
+# # Check if .env file exists (look in parent directory first, then current)
+# ENV_FILE=""
+# if [ -f "../.env" ]; then
+#     ENV_FILE="../.env"
+# elif [ -f ".env" ]; then
+#     ENV_FILE=".env"
+# else
+#     echo -e "${RED}Error: .env file not found${NC}"
+#     echo "Please create a .env file in either:"
+#     echo "  - Current directory: $(pwd)/.env"
+#     echo "  - Parent directory: $(dirname $(pwd))/.env"
+#     echo "With content: SUBSCRIPTION_KEY=your_subscription_key_here"
+#     exit 1
+# fi
+
+# echo -e "${YELLOW}Using .env file: ${ENV_FILE}${NC}"
+
+# # Load environment variables from .env file
+# source "$ENV_FILE"
+
 # Check if necessary environment variables are set
 required_vars=(
   "SOURCE_HOST" "SOURCE_PORT" "SOURCE_DB" "SOURCE_USER" "SOURCE_PASSWORD" 
@@ -118,3 +149,8 @@ echo "Starting simple HTTP server on port 8081 to indicate success..."
 while true; do
   echo -e "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nMigration Succeeded" | nc -l -p 8081 -q 1
 done
+
+
+## Run locally
+# chmod +x transfer_postgres_db.sh # Make the script executable
+# ./transfer_postgres_db.sh  #Run the script
