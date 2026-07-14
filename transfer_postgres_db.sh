@@ -5,35 +5,32 @@
 # All connection parameters are read from environment variables
 
 
-# # To be uncommented and used locally
-# set -e  # Exit on any error
+# To be uncommented and used locally
+set -e  # Exit on any error
 
-# # Colors for output
-# RED='\033[0;31m'
-# GREEN='\033[0;32m'
-# YELLOW='\033[1;33m'
-# BLUE='\033[0;34m'
-# NC='\033[0m' # No Color
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
 
-# # Check if .env file exists (look in parent directory first, then current)
-# ENV_FILE=""
-# if [ -f "../.env" ]; then
-#     ENV_FILE="../.env"
-# elif [ -f ".env" ]; then
-#     ENV_FILE=".env"
-# else
-#     echo -e "${RED}Error: .env file not found${NC}"
-#     echo "Please create a .env file in either:"
-#     echo "  - Current directory: $(pwd)/.env"
-#     echo "  - Parent directory: $(dirname $(pwd))/.env"
-#     echo "With content: SUBSCRIPTION_KEY=your_subscription_key_here"
-#     exit 1
-# fi
+# Check if .env file exists (look in current directory)
+ENV_FILE=""
+if [ -f ".env" ]; then
+    ENV_FILE=".env"
+else
+    echo -e "${RED}Error: .env file not found${NC}"
+    echo "Please create a .env file in either:"
+    echo "  - Current directory: $(pwd)/.env"
+    echo "With content: SUBSCRIPTION_KEY=your_subscription_key_here"
+    exit 1
+fi
 
-# echo -e "${YELLOW}Using .env file: ${ENV_FILE}${NC}"
+echo -e "${YELLOW}Using .env file: ${ENV_FILE}${NC}"
 
-# # Load environment variables from .env file
-# source "$ENV_FILE"
+# Load environment variables from .env file
+source "$ENV_FILE"
 
 # Check if necessary environment variables are set
 required_vars=(
