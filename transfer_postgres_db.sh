@@ -68,6 +68,7 @@ echo "Source: ${SOURCE_HOST}:${SOURCE_PORT}, Target: ${TARGET_HOST}:${TARGET_POR
 
 # Export PostgreSQL password for source connection
 export PGPASSWORD="${SOURCE_PASSWORD}"
+export PGSSLMODE=require
 
 # Step 1: Dump the entire database (schema and data) in custom format
 echo "Dumping database schema and data from source..."
@@ -84,19 +85,27 @@ echo "Database dump completed successfully."
 # Step 2: Restore to target database
 # Export PostgreSQL password for target connection
 export PGPASSWORD="${TARGET_PASSWORD}"
+export PGSSLMODE=require
+
+# Maintenance database used for admin connections (existence check, CREATE DATABASE)
+TARGET_MAINTENANCE_DB="${TARGET_MAINTENANCE_DB:-postgres}"
 
 # Check if target database exists, if not create it
 echo "Checking if target database exists..."
-if ! psql -h "${TARGET_HOST}" -p "${TARGET_PORT}" -U "${TARGET_USER}" \
-  -lqt | cut -d \| -f 1 | grep -qw "${TARGET_DB}"; then
+DB_EXISTS=$(psql -h "${TARGET_HOST}" -p "${TARGET_PORT}" -U "${TARGET_USER}" \
+  -d "${TARGET_MAINTENANCE_DB}" -tAc "SELECT 1 FROM pg_database WHERE datname = '${TARGET_DB}';")
+
+if [ "$DB_EXISTS" != "1" ]; then
   echo "Target database does not exist. Creating..."
   psql -h "${TARGET_HOST}" -p "${TARGET_PORT}" -U "${TARGET_USER}" \
-    -c "CREATE DATABASE \"${TARGET_DB}\";"
-  
+    -d "${TARGET_MAINTENANCE_DB}" -c "CREATE DATABASE \"${TARGET_DB}\";"
+
   if [ $? -ne 0 ]; then
     echo "Error: Failed to create target database!"
     exit 1
   fi
+else
+  echo "Target database already exists."
 fi
 
 echo "Restoring data to target database..."
